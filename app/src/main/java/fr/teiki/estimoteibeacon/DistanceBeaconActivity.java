@@ -1,6 +1,5 @@
 package fr.teiki.estimoteibeacon;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v7.app.ActionBarActivity;
@@ -121,7 +120,7 @@ public class DistanceBeaconActivity extends ActionBarActivity {
 
     private void updateDistanceView(Beacon foundBeacon) {
         if (segmentLength == -1) {
-            return;
+            return; //test
         }
 
         dotView.animate().translationY(computeDotPosY(foundBeacon)).start();
