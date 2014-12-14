@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">EstimoteiBeacon</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="servicestarted">Ranging...</string>
+    <string name="servicelabel">iBeacon Service</string>
+    <string name="title_activity_beacon_settings">BeaconSettingsActivity</string>
+    <string name="title_activity_beacon_distance">DistanceBeaconActivity</string>
+    <string name="dont_disturb">Ne pas déranger</string>
+    <string name="save_distance">Enregistrer une région</string>
+
+</resources>
