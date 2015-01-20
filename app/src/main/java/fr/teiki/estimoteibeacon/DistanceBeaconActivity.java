@@ -35,6 +35,7 @@ public class DistanceBeaconActivity extends ActionBarActivity {
     private Beacon beacon;
     private Region region;
     private String action;
+    private String sound_mode;
 
     private View dotView;
     private int startY = -1;
@@ -50,6 +51,7 @@ public class DistanceBeaconActivity extends ActionBarActivity {
 
         beacon = getIntent().getParcelableExtra(BeaconSettingsActivity.KEY_IBEACON);
         action = getIntent().getStringExtra(BeaconSettingsActivity.ACTION_NAME);
+        sound_mode = getIntent().getStringExtra(BeaconSettingsActivity.KEY_SOUND_MODE);
 
         region = new Region("regionid", beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
         if (beacon == null) {
@@ -106,12 +108,18 @@ public class DistanceBeaconActivity extends ActionBarActivity {
                     target.animate().translationY(y).start();
 
                     float heightdiv3 = v.getHeight()/3;
-                    if (y < heightdiv3)
-                        MyPreferenceManager.updateDistanceAction(getApplicationContext(),beacon,action, (float) 0.01);
-                    else if (y < heightdiv3*2)
-                        MyPreferenceManager.updateDistanceAction(getApplicationContext(),beacon,action, 1);
-                    else
-                        MyPreferenceManager.updateDistanceAction(getApplicationContext(),beacon,action, 3);
+                    if (y < heightdiv3) {
+                        Toast.makeText(getApplicationContext(),BeaconSettingsActivity.REGIONS[0],Toast.LENGTH_SHORT).show();
+                        MyPreferenceManager.updateRegionAction(getApplicationContext(), beacon, action, BeaconSettingsActivity.REGIONS[0]);
+                    }
+                    else if (y < heightdiv3*2) {
+                        Toast.makeText(getApplicationContext(),BeaconSettingsActivity.REGIONS[1],Toast.LENGTH_SHORT).show();
+                        MyPreferenceManager.updateRegionAction(getApplicationContext(), beacon, action, BeaconSettingsActivity.REGIONS[1]);
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(),BeaconSettingsActivity.REGIONS[2],Toast.LENGTH_SHORT).show();
+                        MyPreferenceManager.updateRegionAction(getApplicationContext(), beacon, action, BeaconSettingsActivity.REGIONS[2]);
+                    }
                 }
                 return true;
             }

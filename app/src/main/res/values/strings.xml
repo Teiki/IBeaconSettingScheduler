@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">EstimoteiBeacon</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">iBeaconSettingScheduler</string>
     <string name="action_settings">Settings</string>
     <string name="servicestarted">Ranging...</string>
     <string name="servicelabel">iBeacon Service</string>
     <string name="title_activity_beacon_settings">BeaconSettingsActivity</string>
     <string name="title_activity_beacon_distance">DistanceBeaconActivity</string>
     <string name="dont_disturb">Ne pas déranger</string>
-    <string name="save_distance">Enregistrer une région</string>
+    <string name="save_distance">Choisir une région d\'activation</string>
+    <string name="title_activity_my_application_list">MyApplicationList</string>
+    <string name="launch_app">Lancer une application</string>
+    <string name="wifi_state">Etat du Wifi</string>
+    <string name="activate">Activer</string>
+    <string name="desactivate">Désactiver</string>
+    <string name="normal_sound">Son activé</string>
+    <string name="priority_sound">Notification prioritaire</string>
+    <string name="vibrate_sound">Vibreur</string>
+    <string name="lockscreen">Vérrouiller écran</string>
+    <string name="add_action">Ajout action</string>
+    <string name="title_activity_action_list">ActionList</string>
+    <string name="region">Région</string>
+    <string name="perimetre">Périmètre</string>
+    <string name="or">OU</string>
+    <string name="near">Près :</string>
+    <string name="intermediate">Intermédiaire :</string>
+    <string name="far">Loin :</string>
 
 </resources>

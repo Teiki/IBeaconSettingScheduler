@@ -1,9 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="fr.teiki.estimoteibeacon.BeaconSettingsActivity">
+    tools:context="fr.teiki.estimoteibeacon.ActionList">
     <item
         android:id="@+id/add_action"
-        android:title="@string/add_action"
-        android:icon="@android:drawable/ic_input_add"/>
+        android:title="@string/add_action" />
 </menu>

@@ -16,6 +16,7 @@ import android.os.Parcelable;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
@@ -117,6 +118,8 @@ public class BeaconService extends Service {
 
         beaconManager = new BeaconManager(this);
 
+        //beaconManager.setForegroundScanPeriod(100,0);
+
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override public void onServiceReady() {
                 try {
@@ -158,7 +161,11 @@ public class BeaconService extends Service {
                     mNotificationManager.cancel(notificationID);
                 }
 
-
+                if (!beacons.isEmpty()){
+                    for (Beacon b : beacons){
+                        MyPreferenceManager.executeSingleActions(getApplicationContext(),b);
+                    }
+                }
 
 
 

@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -41,6 +43,36 @@
             android:label="@string/title_activity_beacon_distance"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="fr.teiki.estimoteibeacon.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Module.MyApplicationList"
+            android:label="@string/title_activity_my_application_list"
+            android:parentActivityName=".BeaconSettingsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="fr.teiki.estimoteibeacon.BeaconSettingsActivity" />
+        </activity>
+
+        <receiver
+            android:name=".Module.MyAdmin"
+            android:permission="android.permission.BIND_DEVICE_ADMIN" >
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/policies" >
+                <intent-filter>
+                    <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" >
+                    </action>
+                </intent-filter>
+            </meta-data>
+        </receiver>
+
+        <activity
+            android:name=".ActionList"
+            android:label="@string/title_activity_action_list"
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="fr.teiki.estimoteibeacon.MainActivity" />

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RadioGroup
+        android:id="@+id/activation_mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true">
+
+        <RadioButton
+            android:id="@+id/region_mode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:text="@string/region" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/or" />
+
+        <RadioButton
+            android:id="@+id/perimeter_mode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:text="@string/perimetre" />
+
+    </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/near"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_below="@id/activation_mode" />
+
+
+    <RadioGroup
+        android:id="@+id/near_sound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/near"
+        android:layout_alignParentRight="true"
+        android:visibility="invisible"
+        android:orientation="horizontal"
+        android:weightSum="99">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/my_sound"
+            android:layout_weight="33" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/my_vibrate"
+            android:layout_weight="33" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/my_star"
+            android:layout_weight="33" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/perimeter_1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_toRightOf="@id/near"
+        android:layout_toLeftOf="@id/near_sound" />
+
+    <CheckBox
+        android:id="@+id/intermediate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_below="@id/near_sound"
+        android:text="@string/intermediate" />
+
+
+    <RadioGroup
+        android:id="@+id/intermediate_sound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/intermediate"
+        android:layout_alignParentRight="true"
+        android:visibility="invisible"
+        android:orientation="horizontal"
+        android:weightSum="99">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/my_sound"
+            android:layout_weight="33" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/my_vibrate"
+            android:layout_weight="33" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/my_star"
+            android:layout_weight="33" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/perimeter_2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_toRightOf="@id/intermediate"
+        android:layout_toLeftOf="@id/intermediate_sound" />
+
+    <CheckBox
+        android:id="@+id/far"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_below="@id/intermediate_sound"
+        android:text="@string/far" />
+
+
+    <RadioGroup
+        android:id="@+id/far_sound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/far"
+        android:layout_alignParentRight="true"
+        android:visibility="invisible"
+        android:orientation="horizontal"
+        android:weightSum="99">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/my_sound"
+            android:layout_weight="33" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/my_vibrate"
+            android:layout_weight="33" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/my_star"
+            android:layout_weight="33" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/perimeter_3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_toRightOf="@id/far"
+        android:layout_toLeftOf="@id/far_sound" />
+
+</RelativeLayout>

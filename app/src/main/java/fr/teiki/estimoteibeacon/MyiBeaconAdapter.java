@@ -21,14 +21,32 @@ public class MyiBeaconAdapter extends BaseAdapter {
     private ArrayList<Beacon> beacons;
     private LayoutInflater inflater;
 
+    private static final String DEFAULT_UUID = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
+
     public MyiBeaconAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
         this.beacons = new ArrayList<Beacon>();
+        addDeconnectedBeacons(context);
     }
 
-    public void replaceWith(Collection<Beacon> newBeacons) {
+    private void addDeconnectedBeacons(Context ctx){
+        for (String uuid : MyPreferenceManager.getListSavedBeacon(ctx)){
+            boolean is_online = false;
+            for (Beacon b : beacons){
+                if (b.getMacAddress().equals(uuid))
+                    is_online = true;
+            }
+            if (!is_online) {
+                Beacon newBeacon = new Beacon(DEFAULT_UUID, "", uuid, 0, 0, 0, 0);
+                beacons.add(newBeacon);
+            }
+        }
+    }
+
+    public void replaceWith(Context ctx, Collection<Beacon> newBeacons) {
         this.beacons.clear();
         this.beacons.addAll(newBeacons);
+        addDeconnectedBeacons(ctx);
         notifyDataSetChanged();
     }
 
@@ -56,11 +74,17 @@ public class MyiBeaconAdapter extends BaseAdapter {
 
     private void bind(Beacon beacon, View view) {
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.macTextView.setText(String.format("MAC: %s (%.2fm)", beacon.getMacAddress(), Utils.computeAccuracy(beacon)));
-        holder.majorTextView.setText("Major: " + beacon.getMajor());
-        holder.minorTextView.setText("Minor: " + beacon.getMinor());
-        holder.measuredPowerTextView.setText("MPower: " + beacon.getMeasuredPower());
-        holder.rssiTextView.setText("RSSI: " + beacon.getRssi());
+        if (beacon.getProximityUUID().equals(DEFAULT_UUID)){
+            holder.macTextView.setText(String.format("MAC: %s (%s)", beacon.getMacAddress(), "Déconnecté"));
+        }
+        else {
+            holder.macTextView.setText(String.format("MAC: %s (%.2fm)", beacon.getMacAddress(), MyPreferenceManager.getDistanceAverage()));
+            holder.majorTextView.setText("Major: " + beacon.getMajor());
+            holder.minorTextView.setText("Minor: " + beacon.getMinor());
+            holder.measuredPowerTextView.setText("MPower: " + beacon.getMeasuredPower());
+            holder.rssiTextView.setText("RSSI: " + beacon.getRssi());
+            holder.zoneTextView.setText("Zone: " + Utils.computeProximity(beacon).name());
+        }
     }
 
     private View inflateIfRequired(View view, int position, ViewGroup parent) {
@@ -77,6 +101,7 @@ public class MyiBeaconAdapter extends BaseAdapter {
         final TextView minorTextView;
         final TextView measuredPowerTextView;
         final TextView rssiTextView;
+        final TextView zoneTextView;
 
         ViewHolder(View view) {
             macTextView = (TextView) view.findViewWithTag("mac");
@@ -84,6 +109,7 @@ public class MyiBeaconAdapter extends BaseAdapter {
             minorTextView = (TextView) view.findViewWithTag("minor");
             measuredPowerTextView = (TextView) view.findViewWithTag("mpower");
             rssiTextView = (TextView) view.findViewWithTag("rssi");
+            zoneTextView = (TextView) view.findViewWithTag("zone");
         }
     }
 }
