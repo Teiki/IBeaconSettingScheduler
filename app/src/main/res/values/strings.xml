@@ -23,8 +23,9 @@
     <string name="region">Région</string>
     <string name="perimetre">Périmètre</string>
     <string name="or">OU</string>
-    <string name="near">Près :</string>
-    <string name="intermediate">Intermédiaire :</string>
+    <string name="immediate">Près :</string>
+    <string name="near">Intermédiaire :</string>
     <string name="far">Loin :</string>
+    <string name="ibeacon_personal_name">Nom du iBeacon</string>
 
 </resources>

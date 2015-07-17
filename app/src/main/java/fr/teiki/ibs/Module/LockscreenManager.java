@@ -1,13 +1,8 @@
-package fr.teiki.estimoteibeacon.Module;
+package fr.teiki.ibs.Module;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.admin.DevicePolicyManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.view.Window;
-import android.view.WindowManager;
 
 /**
  * Created by antoinegaltier on 15/12/14.

@@ -1,4 +1,4 @@
-package fr.teiki.estimoteibeacon;
+package fr.teiki.ibs;
 
 import android.content.Context;
 import android.graphics.Canvas;

@@ -1,4 +1,4 @@
-package fr.teiki.estimoteibeacon;
+package fr.teiki.ibs;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;

@@ -1,9 +1,9 @@
-package fr.teiki.estimoteibeacon.Module;
+package fr.teiki.ibs.Module;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
 
-import fr.teiki.estimoteibeacon.R;
+import fr.teiki.ibs.R;
 
 /**
  * Created by antoinegaltier on 14/12/14.

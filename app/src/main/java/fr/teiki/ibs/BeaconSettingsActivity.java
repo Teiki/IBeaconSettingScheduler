@@ -1,4 +1,4 @@
-package fr.teiki.estimoteibeacon;
+package fr.teiki.ibs;
 
 import android.content.Intent;
 import android.media.AudioManager;
@@ -8,15 +8,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Switch;
-import android.widget.TextView;
 
-import com.estimote.sdk.Beacon;
 
 import java.util.Set;
 
-import fr.teiki.estimoteibeacon.Module.MyApplicationList;
+import fr.teiki.ibs.Module.MyApplicationList;
 
 
 public class BeaconSettingsActivity extends ActionBarActivity implements CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener, Button.OnClickListener{
@@ -39,10 +38,12 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
     public static final String PERIMETRE = "Périmètre";
     public static final String[] REGIONS = {"IMMEDIATE","NEAR","FAR"};
     public static final String[] PERIMETRES = {"PERIMETRE_1","PERIMETRE_2","PERIMETRE_3"};
-    public static final int[] PERIMETRES = {"PERIMETRE_1","PERIMETRE_2","PERIMETRE_3"};
+    public static final RadioGroup[] NOTIFICATION_RADIO_GROUPS = new RadioGroup[3];
+    public static final CheckBox[] REGIONS_CHECKBOX = new CheckBox[3];
 
 
-    private Beacon beacon;
+    //private Beacon beacon;
+    private String macaddr_beacon;
 
     private Switch notification_mode_switch;
 //    private RadioGroup group_notification;
@@ -54,15 +55,17 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
     private RadioGroup group_wifi_state;
 
     private RadioGroup notification_activation_mode;
+    private RadioGroup immediate_sound;
     private RadioGroup near_sound;
-    private RadioGroup intermediate_sound;
     private RadioGroup far_sound;
+    private CheckBox immediate;
     private CheckBox near;
-    private CheckBox intermediate;
     private CheckBox far;
     private Button perimeter_1;
     private Button perimeter_2;
     private Button perimeter_3;
+    private Button save_beacon_name;
+    private EditText beacon_name;
 
 
 
@@ -72,8 +75,10 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
         setContentView(R.layout.activity_beacon_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        beacon = getIntent().getParcelableExtra(KEY_IBEACON);
-        if (beacon == null)
+        //beacon = getIntent().getParcelableExtra(KEY_IBEACON);
+
+        macaddr_beacon = getIntent().getStringExtra(KEY_IBEACON);
+        if (macaddr_beacon == null)
             finish();
 
         notification_mode_switch = (Switch) findViewById(R.id.switch_notification);
@@ -84,25 +89,43 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
         group_wifi_state = (RadioGroup) findViewById(R.id.radiogroup_wifi);
 
         notification_activation_mode = (RadioGroup) findViewById(R.id.activation_mode);
+        immediate_sound = (RadioGroup) findViewById(R.id.immediate_sound);
         near_sound = (RadioGroup) findViewById(R.id.near_sound);
-        intermediate_sound = (RadioGroup) findViewById(R.id.intermediate_sound);
         far_sound = (RadioGroup) findViewById(R.id.far_sound);
+        immediate = (CheckBox) findViewById(R.id.immediate);
         near = (CheckBox) findViewById(R.id.near);
-        intermediate = (CheckBox) findViewById(R.id.intermediate);
         far = (CheckBox) findViewById(R.id.far);
         perimeter_1 = (Button) findViewById(R.id.perimeter_1);
         perimeter_2 = (Button) findViewById(R.id.perimeter_2);
         perimeter_3 = (Button) findViewById(R.id.perimeter_3);
+        beacon_name = (EditText) findViewById(R.id.beacon_name);
+        save_beacon_name = (Button) findViewById(R.id.save_beacon_name);
+
+        NOTIFICATION_RADIO_GROUPS[0] = immediate_sound;
+        NOTIFICATION_RADIO_GROUPS[1] = near_sound;
+        NOTIFICATION_RADIO_GROUPS[2] = far_sound;
+        REGIONS_CHECKBOX[0] = immediate;
+        REGIONS_CHECKBOX[1] = near;
+        REGIONS_CHECKBOX[2] = far;
+
+
+        initializeSettings();
 
         notification_activation_mode.setOnCheckedChangeListener(this);
+        immediate_sound.setOnCheckedChangeListener(this);
+        near_sound.setOnCheckedChangeListener(this);
+        far_sound.setOnCheckedChangeListener(this);
 
+        immediate.setOnCheckedChangeListener(this);
+        near.setOnCheckedChangeListener(this);
+        far.setOnCheckedChangeListener(this);
 
 
         launch_app_distance_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BeaconSettingsActivity.this, DistanceBeaconActivity.class);
-                intent.putExtra(BeaconSettingsActivity.KEY_IBEACON, beacon);
+                intent.putExtra(BeaconSettingsActivity.KEY_IBEACON, macaddr_beacon);
                 intent.putExtra(BeaconSettingsActivity.ACTION_NAME, KEY_LAUNCH_APP);
                 startActivity(intent);
             }
@@ -112,17 +135,16 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BeaconSettingsActivity.this, DistanceBeaconActivity.class);
-                intent.putExtra(BeaconSettingsActivity.KEY_IBEACON, beacon);
+                intent.putExtra(BeaconSettingsActivity.KEY_IBEACON, macaddr_beacon);
                 intent.putExtra(BeaconSettingsActivity.ACTION_NAME, KEY_WIFI_STATE);
                 startActivity(intent);
             }
         });
 
-        initializeSettings();
     }
 
     private void initializeSettings() {
-        Set<String> set = MyPreferenceManager.getAssociatedActionSet(this,beacon);
+        Set<String> set = MyPreferenceManager.getAssociatedActionSet(this,macaddr_beacon);
         if (set != null) {
             for (String action : set) {
                 if (action.equals(KEY_SOUND_MODE)) {
@@ -146,12 +168,19 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
         notification_mode_switch.setOnCheckedChangeListener(this);
         wifi_state_switch.setOnCheckedChangeListener(this);
         group_wifi_state.setOnCheckedChangeListener(this);
-        //group_notification.setOnCheckedChangeListener(this);
+
+        beacon_name.setText(MyPreferenceManager.getBeaconName(getApplicationContext(), macaddr_beacon));
+        save_beacon_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyPreferenceManager.setBeaconName(getApplicationContext(),macaddr_beacon,beacon_name.getText().toString());
+            }
+        });
     }
 
     private void displayAppToLaunch(){
-        if (MyPreferenceManager.getAssociatedActionSet(getApplicationContext(),beacon).contains(KEY_LAUNCH_APP)){
-            String packagename = MyPreferenceManager.getAssociatedActionParam(getApplicationContext(), beacon, KEY_LAUNCH_APP);
+        if (MyPreferenceManager.getAssociatedActionSet(getApplicationContext(),macaddr_beacon).contains(KEY_LAUNCH_APP)){
+            String packagename = MyPreferenceManager.getAssociatedActionParam(getApplicationContext(), macaddr_beacon, KEY_LAUNCH_APP);
             launch_app_switch.setText(launch_app_switch.getText()+" : "+packagename);
         }
         else {
@@ -160,43 +189,40 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
     }
 
     private void displayWifiStateChoosen(){
-        if (MyPreferenceManager.getAssociatedActionSet(getApplicationContext(),beacon).contains(KEY_WIFI_STATE)) {
-            int state = MyPreferenceManager.getAssociatedActionState(getApplicationContext(), beacon, KEY_WIFI_STATE);
+        if (MyPreferenceManager.getAssociatedActionSet(getApplicationContext(),macaddr_beacon).contains(KEY_WIFI_STATE)) {
+            int state = MyPreferenceManager.getAssociatedActionState(getApplicationContext(), macaddr_beacon, KEY_WIFI_STATE);
             if (state != -1)
                 group_wifi_state.check(state);
         }
     }
 
+    private int getNotificationIndexFromTab(int notification_mode){
+        int i = 0;
+        while(notification_mode != NOTIFICATION_MODE[i] && i < NOTIFICATION_MODE.length)
+            i++;
+        if (i >= NOTIFICATION_MODE.length)
+            return -1;
+        else
+            return i;
+    }
+
     private void displayNotificationRules(){
-        if (MyPreferenceManager.getAssociatedActionSet(getApplicationContext(),beacon).contains(KEY_SOUND_MODE)) {
-            String activation_mode = MyPreferenceManager.getAssociatedActivationMode(getApplicationContext(),beacon,KEY_SOUND_MODE);
+        if (MyPreferenceManager.getAssociatedActionSet(getApplicationContext(),macaddr_beacon).contains(KEY_SOUND_MODE)) {
+            String activation_mode = MyPreferenceManager.getAssociatedActivationMode(getApplicationContext(),macaddr_beacon,KEY_SOUND_MODE);
             if (activation_mode.equals(REGION)){
                 notification_activation_mode.check(R.id.region_mode);
-                int notification_mode = MyPreferenceManager.getAssociatedNotificationParam(getApplicationContext(),beacon,KEY_SOUND_MODE,REGIONS[0]);
-
             }
-            else {
+            else if (activation_mode.equals(PERIMETRE)){
                 notification_activation_mode.check(R.id.perimeter_mode);
             }
-
-
-
-            int state = MyPreferenceManager.getAssociatedActionState(getApplicationContext(), beacon, KEY_SOUND_MODE);
-            if (state == NOTIFICATION_MODE[0]) {
-                normal_sound.setChecked(true);
-                findViewById(R.id.normal_buttons).setVisibility(View.VISIBLE);
-                ((TextView)findViewById(R.id.normal_sound_activation)).setText(
-                        MyPreferenceManager.getAssociatedActivationMode(getApplicationContext(),beacon,KEY_SOUND_MODE) +
-                        " : " +
-                        MyPreferenceManager.getAssociatedActivationParam(getApplicationContext(), beacon, KEY_SOUND_MODE)); //Utiliser des clés diffèrentes selon le mode de notif
-            }
-            else if (state == NOTIFICATION_MODE[1]) {
-                vibrate_sound.setChecked(true);
-                findViewById(R.id.vibrate_buttons).setVisibility(View.VISIBLE);
-            }
-            else if (state == NOTIFICATION_MODE[2]) {
-                priority_sound.setChecked(true);
-                findViewById(R.id.priority_buttons).setVisibility(View.VISIBLE);
+            for (int i = 0; i < REGIONS.length; i ++) {
+                int notification_mode = MyPreferenceManager.getAssociatedNotificationParam(getApplicationContext(), macaddr_beacon, KEY_SOUND_MODE, REGIONS[i]);
+                if (notification_mode != -1) {
+                    REGIONS_CHECKBOX[i].setChecked(true);
+                    int index = getNotificationIndexFromTab(notification_mode);
+                    if (index != -1)
+                        NOTIFICATION_RADIO_GROUPS[i].check(NOTIFICATION_RADIO_GROUPS[i].getChildAt(index).getId());
+                }
             }
         }
     }
@@ -207,12 +233,12 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
 
             if (isChecked) {
                 findViewById(R.id.notification_options).setVisibility(View.VISIBLE);
-                MyPreferenceManager.addAction(this, beacon, KEY_SOUND_MODE, NOTIFICATION_MODE[DEFAULT_SOUND_MODE]);
+                MyPreferenceManager.addAction(this, macaddr_beacon, KEY_SOUND_MODE, NOTIFICATION_MODE[DEFAULT_SOUND_MODE]);
 
             }
             else {
-                findViewById(R.id.notification_options).setVisibility(View.VISIBLE);
-                MyPreferenceManager.removeAction(this, beacon, KEY_SOUND_MODE);
+                findViewById(R.id.notification_options).setVisibility(View.GONE);
+                MyPreferenceManager.removeAction(this, macaddr_beacon, KEY_SOUND_MODE);
             }
         }
         else if (buttonView.equals(launch_app_switch)){
@@ -223,7 +249,7 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
             }
             else {
                 launch_app_distance_button.setVisibility(View.GONE);
-                MyPreferenceManager.removeAction(this, beacon, KEY_LAUNCH_APP);
+                MyPreferenceManager.removeAction(this, macaddr_beacon, KEY_LAUNCH_APP);
                 displayAppToLaunch();
             }
         }
@@ -232,59 +258,38 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
             if (isChecked) {
                 group_wifi_state.setVisibility(View.VISIBLE);
                 wifi_state_distance_button.setVisibility(View.VISIBLE);
-                MyPreferenceManager.addAction(this, beacon, KEY_WIFI_STATE);
+                MyPreferenceManager.addAction(this, macaddr_beacon, KEY_WIFI_STATE);
             }
             else {
                 wifi_state_distance_button.setVisibility(View.GONE);
                 group_wifi_state.setVisibility(View.GONE);
-                MyPreferenceManager.removeAction(this, beacon, KEY_WIFI_STATE);
+                MyPreferenceManager.removeAction(this, macaddr_beacon, KEY_WIFI_STATE);
             }
         }
-        else if (buttonView.equals(normal_sound)){
-            if (isChecked) {
-                findViewById(R.id.normal_buttons).setVisibility(View.VISIBLE);
-                MyPreferenceManager.addAction(this, beacon, KEY_SOUND_MODE, NOTIFICATION_MODE[0]);
+        else if (buttonView.equals(immediate)){
+            if (isChecked){
+                immediate_sound.check(0);
             }
             else {
-                findViewById(R.id.normal_buttons).setVisibility(View.GONE);
-                MyPreferenceManager.removeAction(this, beacon, KEY_SOUND_MODE + NOTIFICATION_MODE[0]);
+                MyPreferenceManager.removeAction(getApplicationContext(),macaddr_beacon,REGIONS[0]);
             }
         }
-        else if (buttonView.equals(vibrate_sound)){
-            if (isChecked) {
-                findViewById(R.id.vibrate_buttons).setVisibility(View.VISIBLE);
-                MyPreferenceManager.addAction(this, beacon, KEY_SOUND_MODE, NOTIFICATION_MODE[1]);
+        else if (buttonView.equals(near)){
+            if (isChecked){
+                near_sound.check(0);
             }
             else {
-                findViewById(R.id.vibrate_buttons).setVisibility(View.GONE);
-                MyPreferenceManager.removeAction(this, beacon, KEY_SOUND_MODE + NOTIFICATION_MODE[1]);
+                MyPreferenceManager.removeAction(getApplicationContext(),macaddr_beacon,REGIONS[1]);
             }
         }
-        else if (buttonView.equals(priority_sound)){
-            if (isChecked) {
-                findViewById(R.id.priority_buttons).setVisibility(View.VISIBLE);
-                MyPreferenceManager.addAction(this, beacon, KEY_SOUND_MODE, NOTIFICATION_MODE[2]);
+        else if (buttonView.equals(far)){
+            if (isChecked){
+                far_sound.check(0);
             }
             else {
-                findViewById(R.id.priority_buttons).setVisibility(View.GONE);
-                MyPreferenceManager.removeAction(this, beacon, KEY_SOUND_MODE + NOTIFICATION_MODE[2]);
+                MyPreferenceManager.removeAction(getApplicationContext(),macaddr_beacon,REGIONS[2]);
             }
         }
-//        else if (buttonView.equals(lockscreen_switch)){
-//
-//            if (isChecked) {
-//                Intent intent = new   Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-//                ComponentName mDeviceAdminSample = new ComponentName(this, MyAdmin.class);
-//                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdminSample);
-//                startActivity(intent);
-//                lockscreen_distance_button.setVisibility(View.VISIBLE);
-//                MyPreferenceManager.addAction(this, beacon, KEY_LOCKSCREEN);
-//            }
-//            else {
-//                lockscreen_distance_button.setVisibility(View.GONE);
-//                MyPreferenceManager.removeAction(this, beacon, KEY_LOCKSCREEN);
-//            }
-//        }
     }
 
     @Override
@@ -292,7 +297,7 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
 
         if(resultCode == RESULT_OK && requestCode == 0){
             launch_app_distance_button.setVisibility(View.VISIBLE);
-            MyPreferenceManager.addAction(this,beacon,KEY_LAUNCH_APP,data.getStringExtra(APP_NAME));
+            MyPreferenceManager.addAction(this,macaddr_beacon,KEY_LAUNCH_APP,data.getStringExtra(APP_NAME));
             displayAppToLaunch();
         }
 
@@ -301,53 +306,57 @@ public class BeaconSettingsActivity extends ActionBarActivity implements Compoun
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         if (group.equals(group_wifi_state)){
-            MyPreferenceManager.addAction(getApplicationContext(), beacon, KEY_WIFI_STATE, checkedId);
+            MyPreferenceManager.addAction(getApplicationContext(), macaddr_beacon, KEY_WIFI_STATE, checkedId);
         }
         else if (group.equals(notification_activation_mode)){
-            if (checkedId == 0){
+            if (checkedId == R.id.region_mode){
                 far.setText(R.string.far);
-                intermediate.setText(R.string.intermediate);
                 near.setText(R.string.near);
+                immediate.setText(R.string.immediate);
 
-                perimeter_1.setVisibility(View.INVISIBLE);
-                perimeter_2.setVisibility(View.INVISIBLE);
-                perimeter_3.setVisibility(View.INVISIBLE);
+                perimeter_1.setVisibility(View.GONE);
+                perimeter_2.setVisibility(View.GONE);
+                perimeter_3.setVisibility(View.GONE);
+
+                MyPreferenceManager.updateActivationMode(getApplicationContext(),macaddr_beacon,KEY_SOUND_MODE,REGION);
+                //displayNotificationRules();
             }
-            else {
+            else if (checkedId == R.id.perimeter_mode){
                 far.setText("");
-                intermediate.setText("");
                 near.setText("");
+                immediate.setText("");
 
                 perimeter_1.setVisibility(View.VISIBLE);
                 perimeter_2.setVisibility(View.VISIBLE);
                 perimeter_3.setVisibility(View.VISIBLE);
+
+                MyPreferenceManager.updateActivationMode(getApplicationContext(),macaddr_beacon,KEY_SOUND_MODE,PERIMETRE);
+                //displayNotificationRules();
             }
+        }
+        else if (group.equals(immediate_sound)){
+
+            MyPreferenceManager.updateZoneAction(getApplicationContext(),macaddr_beacon,KEY_SOUND_MODE,REGIONS[0],group.indexOfChild(findViewById(checkedId)));
+        }
+        else if (group.equals(near_sound)){
+
+            MyPreferenceManager.updateZoneAction(getApplicationContext(),macaddr_beacon,KEY_SOUND_MODE,REGIONS[1],group.indexOfChild(findViewById(checkedId)));
+        }
+        else if (group.equals(far_sound)){
+
+            MyPreferenceManager.updateZoneAction(getApplicationContext(),macaddr_beacon,KEY_SOUND_MODE,REGIONS[2],group.indexOfChild(findViewById(checkedId)));
         }
     }
 
+//    private void getNotificationParam(RadioGroup group, int id){
+//        for (int i; i <= group.child)
+//    }
+
 
     @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.normal_region){
-            Intent intent = new Intent(BeaconSettingsActivity.this, DistanceBeaconActivity.class);
-                intent.putExtra(BeaconSettingsActivity.KEY_IBEACON, beacon);
-                intent.putExtra(BeaconSettingsActivity.ACTION_NAME, KEY_SOUND_MODE);
-                intent.putExtra(BeaconSettingsActivity.KEY_SOUND_MODE, NOTIFICATION_MODE[0]);
-                startActivity(intent);
-        }
-        else if (v.getId() == R.id.vibrate_region){
-            Intent intent = new Intent(BeaconSettingsActivity.this, DistanceBeaconActivity.class);
-            intent.putExtra(BeaconSettingsActivity.KEY_IBEACON, beacon);
-            intent.putExtra(BeaconSettingsActivity.ACTION_NAME, KEY_SOUND_MODE);
-            intent.putExtra(BeaconSettingsActivity.KEY_SOUND_MODE, NOTIFICATION_MODE[1]);
-            startActivity(intent);
-        }
-        else if (v.getId() == R.id.priority_region){
-            Intent intent = new Intent(BeaconSettingsActivity.this, DistanceBeaconActivity.class);
-            intent.putExtra(BeaconSettingsActivity.KEY_IBEACON, beacon);
-            intent.putExtra(BeaconSettingsActivity.ACTION_NAME, KEY_SOUND_MODE);
-            intent.putExtra(BeaconSettingsActivity.KEY_SOUND_MODE, NOTIFICATION_MODE[2]);
-            startActivity(intent);
+    public void onClick(View buttonView) {
+        if (buttonView.equals(immediate)){
+
         }
     }
 }

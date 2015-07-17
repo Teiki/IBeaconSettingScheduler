@@ -8,6 +8,8 @@
         android:id="@+id/activation_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true">
 
@@ -15,38 +17,42 @@
             android:id="@+id/region_mode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="50"
+            android:layout_weight="48"
+            android:gravity="center"
             android:text="@string/region" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textColor="@android:color/black"
             android:text="@string/or" />
 
         <RadioButton
             android:id="@+id/perimeter_mode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="50"
+            android:layout_weight="48"
+            android:gravity="center"
             android:text="@string/perimetre" />
 
     </RadioGroup>
 
     <CheckBox
-        android:id="@+id/near"
+        android:id="@+id/immediate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
+        android:text="@string/immediate"
         android:layout_below="@id/activation_mode" />
 
 
     <RadioGroup
-        android:id="@+id/near_sound"
+        android:id="@+id/immediate_sound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/near"
+        android:layout_alignTop="@id/immediate"
         android:layout_alignParentRight="true"
-        android:visibility="invisible"
         android:orientation="horizontal"
         android:weightSum="99">
 
@@ -75,25 +81,25 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:layout_toRightOf="@id/near"
-        android:layout_toLeftOf="@id/near_sound" />
+        android:layout_toRightOf="@id/immediate"
+        android:layout_toLeftOf="@id/immediate_sound"
+        android:layout_alignTop="@id/immediate"/>
 
     <CheckBox
-        android:id="@+id/intermediate"
+        android:id="@+id/near"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:layout_below="@id/near_sound"
-        android:text="@string/intermediate" />
+        android:layout_below="@id/immediate_sound"
+        android:text="@string/near" />
 
 
     <RadioGroup
-        android:id="@+id/intermediate_sound"
+        android:id="@+id/near_sound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/intermediate"
+        android:layout_alignTop="@id/near"
         android:layout_alignParentRight="true"
-        android:visibility="invisible"
         android:orientation="horizontal"
         android:weightSum="99">
 
@@ -122,15 +128,16 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:layout_toRightOf="@id/intermediate"
-        android:layout_toLeftOf="@id/intermediate_sound" />
+        android:layout_toRightOf="@id/near"
+        android:layout_toLeftOf="@id/near_sound"
+        android:layout_alignTop="@id/near" />
 
     <CheckBox
         android:id="@+id/far"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:layout_below="@id/intermediate_sound"
+        android:layout_below="@id/near_sound"
         android:text="@string/far" />
 
 
@@ -140,7 +147,6 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/far"
         android:layout_alignParentRight="true"
-        android:visibility="invisible"
         android:orientation="horizontal"
         android:weightSum="99">
 
@@ -170,6 +176,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_toRightOf="@id/far"
-        android:layout_toLeftOf="@id/far_sound" />
+        android:layout_toLeftOf="@id/far_sound"
+        android:layout_alignTop="@id/far" />
 
 </RelativeLayout>

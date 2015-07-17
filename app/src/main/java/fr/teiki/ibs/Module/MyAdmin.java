@@ -1,4 +1,4 @@
-package fr.teiki.estimoteibeacon.Module;
+package fr.teiki.ibs.Module;
 
 import android.app.Activity;
 import android.app.admin.DeviceAdminReceiver;

@@ -6,8 +6,8 @@ android {
 
 
     defaultConfig {
-        applicationId "fr.teiki.estimoteibeacon"
-        minSdkVersion 14
+        applicationId "fr.teiki.ibs"
+        minSdkVersion 18
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -28,5 +28,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.2'
-    compile files('../EstimoteSDK/estimote-sdk-preview.jar')
+    compile 'org.altbeacon:android-beacon-library:2.1.4'
 }

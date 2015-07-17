@@ -1,4 +1,4 @@
-package fr.teiki.estimoteibeacon.Module;
+package fr.teiki.ibs.Module;
 
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import fr.teiki.estimoteibeacon.R;
+import fr.teiki.ibs.R;
 
 /**
  * Created by antoinegaltier on 14/12/14.

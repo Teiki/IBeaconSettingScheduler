@@ -1,11 +1,10 @@
-package fr.teiki.estimoteibeacon.Module;
+package fr.teiki.ibs.Module;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import fr.teiki.estimoteibeacon.BeaconSettingsActivity;
-import fr.teiki.estimoteibeacon.R;
+import fr.teiki.ibs.BeaconSettingsActivity;
+import fr.teiki.ibs.R;
 
 public class MyApplicationList extends ActionBarActivity {
 

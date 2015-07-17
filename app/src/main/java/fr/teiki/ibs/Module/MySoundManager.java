@@ -1,9 +1,10 @@
-package fr.teiki.estimoteibeacon.Module;
+package fr.teiki.ibs.Module;
 
 import android.content.Context;
 import android.media.AudioManager;
 
-import fr.teiki.estimoteibeacon.R;
+import fr.teiki.ibs.BeaconService;
+import fr.teiki.ibs.BeaconSettingsActivity;
 
 /**
  * Created by antoinegaltier on 08/12/14.
@@ -18,7 +19,8 @@ public class MySoundManager {
             if (amanager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
                 if (old_mode == -1) {
                     old_mode = amanager.getRingerMode();
-                    amanager.setRingerMode(mode);
+                    if (mode>=0 && mode<BeaconSettingsActivity.NOTIFICATION_MODE.length)
+                        amanager.setRingerMode(BeaconSettingsActivity.NOTIFICATION_MODE[mode]);
                 }
             }
         }
